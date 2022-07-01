@@ -94,6 +94,14 @@
                                 <li><a class="nav-link" href="{{ route('admin.blog.list'); }}">List Blogs</a></li>
                             </ul>
                         </li>
+                        <li class="dropdown">
+                            <a href="#" class="menu-toggle nav-link has-dropdown"><i
+                                    data-feather="user"></i><span>Users</span></a>
+                            <ul class="dropdown-menu">
+                                <li><a class="nav-link" href="{{ route('admin.user.buyer.list'); }}">Buyer</a></li>
+                                <li><a class="nav-link" href="{{ route('admin.user.seller.list'); }}">Seller</a></li>
+                            </ul>
+                        </li>
 
                     </ul>
                 </aside>

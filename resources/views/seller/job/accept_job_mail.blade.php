@@ -4,9 +4,9 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
+                <div class="card-header">{{ $title }}</div>
                 <div class="card-body">
-                    <h1>Your Have Hired {{ $servicetitle }} Service</h1>
-                    <p>This service is offered by {{ $email }}</p>
+                    <h1>{{ $msg }}</h1>
                 </div>
             </div>
         </div>

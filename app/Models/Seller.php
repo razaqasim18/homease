@@ -27,6 +27,9 @@ class Seller extends Authenticatable
         'address',
         'location',
         'expired_at',
+        'isverified',
+        'isblocked',
+        'isdeleted',
     ];
 
     /**

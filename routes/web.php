@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
+use App\Http\Controllers\Admin\UserController;
 // buyer
 use App\Http\Controllers\Buyer\Auth\ForgotPasswordController as BuyerForgotPasswordController;
 use App\Http\Controllers\Buyer\Auth\LoginController as BuyerLoginController;
@@ -21,10 +22,12 @@ use App\Http\Controllers\Seller\Auth\LoginController as SellerLoginController;
 use App\Http\Controllers\Seller\Auth\RegisterController as SellerRegisterController;
 use App\Http\Controllers\Seller\Auth\ResetPasswordController as SellerResetPasswordController;
 use App\Http\Controllers\Seller\HomeController as SellerHomeController;
+use App\Http\Controllers\Seller\JobController as SellerJobController;
 use App\Http\Controllers\Seller\ProfileController as SellerProfileController;
 use App\Http\Controllers\Seller\ServiceController as SellerServiceController;
 use App\Http\Controllers\Seller\SubscriptionController as SellerSubscriptionController;
-use Illuminate\Support\Facades\DB;
+use App\Models\Review;
+use App\Models\Service;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -61,6 +64,17 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/profile', [AdminProfileController::class, 'index'])->name('profile');
         Route::post('/profile/update', [AdminProfileController::class, 'store'])->name('update');
         Route::post('/profile/password/update', [AdminProfileController::class, 'passwordChange'])->name('password');
+
+        Route::prefix('users')->name('user.')->group(function () {
+            Route::get('/buyer', [UserController::class, 'buyerList'])->name('buyer.list');
+            Route::get('/seller', [UserController::class, 'sellerList'])->name('seller.list');
+
+            Route::post('/buyer/block/{id}', [UserController::class, 'buyerBlock'])->name('buyer.block');
+            Route::post('/seller/block/{id}', [UserController::class, 'sellerBlock'])->name('seller.block');
+
+            Route::post('/buyer/deleted/{id}', [UserController::class, 'buyerDelete'])->name('buyer.delete');
+            Route::post('/seller/deleted/{id}', [UserController::class, 'sellerDelete'])->name('seller.delete');
+        });
 
         Route::prefix('category')->name('category.')->group(function () {
             Route::get('/', [CategoryController::class, 'index'])->name('list');
@@ -107,7 +121,7 @@ Route::prefix('buyer')->name('buyer.')->group(function () {
         });
     });
 
-    Route::middleware(['auth:buyer', 'isverified'])->group(function () {
+    Route::middleware(['auth:buyer', 'isverified', 'isblocked', 'isdeleted'])->group(function () {
         Route::get('/', [BuyerHomeController::class, 'index'])->name('dashboard');
         Route::post('/logout', [BuyerLoginController::class, 'logout'])->name('logout');
         Route::get('/profile', [BuyerProfileController::class, 'index'])->name('profile');
@@ -117,7 +131,12 @@ Route::prefix('buyer')->name('buyer.')->group(function () {
         Route::post('/hire', [BuyerHomeController::class, 'hireMe'])->name('hireme');
 
         Route::prefix('job')->name('job.')->group(function () {
-            Route::get('/', [BuyerJobController::class, 'index'])->name('dashboard');
+            Route::get('/', [BuyerJobController::class, 'index'])->name('list');
+            Route::delete('/delete/{id}', [BuyerJobController::class, 'delete'])->name('delete');
+            Route::get('/approve/{id}', [BuyerJobController::class, 'approve'])->name('approve');
+            Route::get('/review/{id}', [BuyerJobController::class, 'review'])->name('review');
+            Route::post('/review', [BuyerJobController::class, 'postReview'])->name('post.review');
+            Route::get('/review/view/{id}', [BuyerJobController::class, 'reviewView'])->name('review.view');
 
         });
     });
@@ -139,7 +158,7 @@ Route::prefix('seller')->name('seller.')->group(function () {
         });
     });
 
-    Route::middleware(['auth:seller', 'isverified'])->prefix('subscription')->name('subscription.')->group(function () {
+    Route::middleware(['auth:seller', 'isverified', 'isblocked', 'isdeleted'])->prefix('subscription')->name('subscription.')->group(function () {
         Route::get('/', [SellerSubscriptionController::class, 'index'])->name('index');
         Route::get('/pay', [SellerSubscriptionController::class, 'payWithEasyPaisa'])->name('pay');
         Route::get('/pay/urlback', [SellerSubscriptionController::class, 'payWithEasyPaisa'])->name('urlback');
@@ -148,7 +167,7 @@ Route::prefix('seller')->name('seller.')->group(function () {
 
     Route::post('/logout', [SellerLoginController::class, 'logout'])->name('logout');
 
-    Route::middleware(['auth:seller', 'isverified', 'isexpired'])->group(function () {
+    Route::middleware(['auth:seller', 'isverified', 'isexpired', 'isblocked', 'isdeleted'])->group(function () {
         Route::get('/', [SellerHomeController::class, 'index'])->name('dashboard');
         Route::get('/profile', [SellerProfileController::class, 'index'])->name('profile');
         Route::post('/profile/update', [SellerProfileController::class, 'store'])->name('update');
@@ -166,32 +185,36 @@ Route::prefix('seller')->name('seller.')->group(function () {
             Route::delete('image/delete/{id}', [SellerServiceController::class, 'destroyImages'])->name('deleteimages');
             Route::post('storeUpdateImage', [SellerServiceController::class, 'storeUpdateImage'])->name('storeUpdateImage');
         });
+
+        Route::prefix('job')->name('job.')->group(function () {
+            Route::get('/', [SellerJobController::class, 'index'])->name('list');
+            Route::get('/cancel/{id}', [SellerJobController::class, 'cancel'])->name('cancel');
+            Route::get('/accept/{id}', [SellerJobController::class, 'accept'])->name('accept');
+            Route::get('/start/{id}', [SellerJobController::class, 'start'])->name('start');
+            Route::get('/finish/{id}', [SellerJobController::class, 'finish'])->name('finish');
+            Route::get('/review/view/{id}', [SellerJobController::class, 'reviewView'])->name('review.view');
+
+        });
     });
 });
 
 Route::get('/check', function () {
     $category = "1";
-    $distance = "2";
-    $latitude = "30.375321";
-    $longitude = "69.345116";
+    $service_id = "2";
+    $average_rating = 0;
+    $total_review = 0;
+    $total_user_rating = 0;
+    $result = Review::where('service_id', $service_id)->get();
+    foreach ($result as $row) {
+        $total_review++;
+        $total_user_rating = $total_user_rating + $row->rating;
+    }
 
-    $data = DB::table('services')
-        ->selectRaw("sellers.image AS image,description,sellers.id,price,latitude, longitude, SQRT(POW(69.1 * (latitude -  $latitude), 2) +POW(69.1 * ($longitude - longitude) * COS(latitude / 57.3), 2)) AS distance")
-        ->join('sellers', 'sellers.id', '=', 'services.seller_id')
-        ->where('category_id', $category)
-// ->where('address', 'like', '%' . $location . '%')
-// ->having('distance', '<', $distance)
-        ->groupBy('services.id')
-        ->having('distance', '<', $distance)
-        ->orderBy('distance')
-        ->paginate(5);
+    $average_rating = ($total_review != 0) ? $total_user_rating / $total_review : $total_user_rating;
 
-    $data = DB::table('services')
-        ->selectRaw("title,services.created_at,sellers.image AS image,description,sellers.id,price")
-        ->join('sellers', 'sellers.id', '=', 'services.seller_id')
-        ->paginate(5);
-
-    dd($data);
-    return view('search_service', ['data' => $data]);
-
+    $average_rating = number_format($average_rating, 1);
+    $response = Service::whereId($service_id)->update([
+        'rating' => $average_rating,
+    ]);
+    dd($response);
 });

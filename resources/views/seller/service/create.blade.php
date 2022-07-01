@@ -183,7 +183,12 @@ $(function() {
                     cache: false,
                     contentType: false,
                     processData: false,
-
+                    beforeSend: function() {
+                        $(".loader").show();
+                    },
+                    complete: function() {
+                        $(".loader").hide();
+                    },
                     success: function(result) {
                         var result = jQuery.parseJSON(result);
                         var typeOfResponse = result['type'];

@@ -155,6 +155,12 @@ $("button#insertButton").click(function() {
             "category": category,
             "_token": token,
         },
+        beforeSend: function() {
+            $(".loader").show();
+        },
+        complete: function() {
+            $(".loader").hide();
+        },
         success: function(response) {
             var result = jQuery.parseJSON(response);
             var typeOfResponse = result['type'];
@@ -207,8 +213,13 @@ $("body").on("click", "button#updateButton", function() {
             "category": category,
             "_token": token,
         },
+        beforeSend: function() {
+            $(".loader").show();
+        },
+        complete: function() {
+            $(".loader").hide();
+        },
         success: function(response) {
-            console.log(response);
             var result = jQuery.parseJSON(response);
             var typeOfResponse = result['type'];
             var res = result['msg'];
@@ -254,11 +265,16 @@ $("#save-stage").on("click", "button#deletButton", function() {
                         "id": id,
                         "_token": token,
                     },
+                    beforeSend: function() {
+                        $(".loader").show();
+                    },
+                    complete: function() {
+                        $(".loader").hide();
+                    },
                     success: function(response) {
                         var result = jQuery.parseJSON(response);
                         var typeOfResponse = result['type'];
                         var res = result['msg'];
-                        console.log(res);
                         if (typeOfResponse == 0) {
                             swal('Error', res, 'error');
                         } else if (typeOfResponse == 1) {

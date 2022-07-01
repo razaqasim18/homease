@@ -6,7 +6,7 @@
 
 <!--Slider-Area Start-->
 <div class="slider-area">
-    <div class="slider-item lazyload" style="background-image: url(<?php echo asset('uploads/banner/banner1.jpg') ?>)">
+    <div class="slider-item lazyload" style="background-image: url(<?php echo asset('fronts/images/banner1.jpg') ?>)">
         <div class="bg-3" style="opacity:0.6;"></div>
     </div>
 </div>

@@ -43,25 +43,17 @@ class LoginController extends Controller
         $email = $request->email;
         $password = $request->password;
         $rememberToken = $request->remember;
-        if (Auth::guard('buyer')->attempt($request->only('email', 'password'))) {
-            // Illuminate\Auth\SessionGuard::updateSession(auth('buyer')->user()->id);
-            // updateSession(getAuthIdentifier());
-            // auth('buyer')->updateSession(auth('buyer')->user()->id);
-            // Auth::guard('buyer')->login();
-            // $request->session()->regenerate();
-            // session()->put(Auth::getName(), Auth::guard('buyer')->id());
 
-            // session()->migrate(true);
-            // Auth::guard('buyer')->login($request);
-            // auth('buyer')->check();
-            $request->session()->put("LoggedBuyer", Auth::guard('buyer')->id());
-            // Auth::guard('buyer')->login(Auth::guard('buyer')->user());
+        // now we use the Auth to Authenticate the users Credentials
 
-            $output = ["type" => 1, "msg" => "buyer"];
+        // Attempt Login for members
+        if (Auth::guard('buyer')->attempt(['email' => $email, 'password' => $password], $rememberToken)) {
+            $user = \Auth::guard('buyer')->user();
+
+            $output = ["type" => 1, "msg" => "Login Successful"];
         } else {
             $output = ["type" => 0, "msg" => "Invalid Login credential"];
         }
-        echo json_encode($output);
-        exit;
+        return response()->json($output);
     }
 }

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('title', 100);
             $table->text('image')->nullable();
             $table->text('description');
-            $table->float('rating', 2, 2)->default('0.0');
+            $table->float('rating', 5, 2)->default('0.0');
             $table->string('price', 30);
             $table->text('address');
             $table->text('latitude', 30);

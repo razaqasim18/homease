@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Blog;
 use App\Models\Category;
 use App\Models\Faq;
+use App\Models\Review;
+use App\Models\Seller;
 use App\Models\Service;
 use App\Models\Serviceimage;
 use Illuminate\Http\Request;
@@ -20,6 +22,9 @@ class HomeController extends Controller
     public function __construct()
     {
         // $this->middleware(['auth', 'verified']);
+        Seller::where('expired_at', '<=', Date("Y-m-d"))->update([
+            'isexpired' => 1,
+        ]);
     }
 
     /**
@@ -154,10 +159,13 @@ class HomeController extends Controller
             ->join('sellers', 'sellers.id', '=', 'services.seller_id')
             ->where("services.id", base64_decode($id))->first();
         $serviceimages = Serviceimage::where("service_id", base64_decode($id))->get();
+        $review = Review::select('*', 'reviews.created_at AS created')->join("buyers", "buyers.id", "=", "reviews.buyer_id")
+            ->where("service_id", base64_decode($id))->get();
         return view('service', [
             'title' => str_replace("-", " ", $title),
             'service' => $service,
             'serviceimages' => $serviceimages,
+            'review' => $review,
         ]);
     }
 }

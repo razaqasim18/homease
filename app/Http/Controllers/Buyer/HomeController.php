@@ -61,7 +61,7 @@ class HomeController extends Controller
                 // Buyer mail
                 Mail::send('buyer_job_mail', [
                     'servicetitle' => $service->title,
-                    'selleremail' => $seller->email,
+                    'email' => $seller->email,
                 ], function ($message) use ($buyer) {
                     $message->to($buyer->email);
                     $message->subject('Job Hiring Mail');
@@ -69,7 +69,7 @@ class HomeController extends Controller
                 // Seller mail
                 Mail::send('buyer_job_mail', [
                     'servicetitle' => $service->title,
-                    'buyeremail' => $buyer->email,
+                    'email' => $buyer->email,
                 ], function ($message) use ($seller) {
                     $message->to($seller->email);
                     $message->subject('Job Hiring Mail');

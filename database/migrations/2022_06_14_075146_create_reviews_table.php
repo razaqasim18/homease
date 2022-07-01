@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('seller_id')->constrained('sellers')->onDelete('cascade');
             $table->foreignId('buyer_id')->constrained('buyers')->onDelete('cascade');
             $table->foreignId('hiring_id')->constrained('hirings')->onDelete('cascade');
-            $table->float('rating', 2, 2);
+            $table->float('rating', 5, 2);
             $table->text('comment');
             $table->timestamps();
 

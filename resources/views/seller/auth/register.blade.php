@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <title>Seller || Login</title>
+    <title>Seller || Registration</title>
     <!-- General CSS Files -->
     <link rel="stylesheet" href="{{ asset('assets/css/app.min.css') }}">
     <!-- Template CSS -->
@@ -79,12 +79,12 @@
                                                 <label for="address">Address</label>
                                                 <div class="input-group">
                                                     <input type="text" class="form-control" name="address" id="address"
-                                                        required>
+                                                        required readonly>
                                                     <div class="input-group-append">
                                                         <span class="input-group-text" id="googlelocation">Get
                                                             Location</span>
                                                     </div>
-                                                    <input type="text" name="location" id="location" class="col-12" />
+                                                    <input type="hidden" name="location" id="location" class="col-12" />
                                                 </div>
                                             </div>
 

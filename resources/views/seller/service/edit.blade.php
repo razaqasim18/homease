@@ -211,6 +211,12 @@ $(function() {
                     cache: false,
                     contentType: false,
                     processData: false,
+                    beforeSend: function() {
+                        $(".loader").show();
+                    },
+                    complete: function() {
+                        $(".loader").hide();
+                    },
                     success: function(result) {
                         var result = jQuery.parseJSON(result);
                         var typeOfResponse = result['type'];
@@ -332,6 +338,12 @@ $(document).ready(function() {
                         data: {
                             "id": id,
                             "_token": token,
+                        },
+                        beforeSend: function() {
+                            $(".loader").show();
+                        },
+                        complete: function() {
+                            $(".loader").hide();
                         },
                         success: function(response) {
                             var result = jQuery.parseJSON(response);

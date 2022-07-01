@@ -54,6 +54,8 @@ class Kernel extends HttpKernel
      */
     protected $routeMiddleware = [
         'auth' => \App\Http\Middleware\Authenticate::class,
+        'isblocked' => \App\Http\Middleware\IsBlocked::class,
+        'isdeleted' => \App\Http\Middleware\IsDeleted::class,
         'isverified' => \App\Http\Middleware\IsVerified::class,
         'isexpired' => \App\Http\Middleware\isExpired::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,

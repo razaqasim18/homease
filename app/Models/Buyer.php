@@ -26,6 +26,8 @@ class Buyer extends Authenticatable
         'address',
         'location',
         'isverified',
+        'isblocked',
+        'isdeleted',
         'email_verified_at',
     ];
 

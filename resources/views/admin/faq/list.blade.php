@@ -97,6 +97,12 @@ $("#save-stage").on("click", "button#deletButton", function() {
                         "id": id,
                         "_token": token,
                     },
+                    beforeSend: function() {
+                        $(".loader").show();
+                    },
+                    complete: function() {
+                        $(".loader").hide();
+                    },
                     success: function(response) {
                         var result = jQuery.parseJSON(response);
                         var typeOfResponse = result['type'];

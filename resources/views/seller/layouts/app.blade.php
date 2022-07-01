@@ -65,7 +65,7 @@
                     <div class="sidebar-brand">
                         <a href="{{ route('seller.dashboard') }}"> <img alt="image"
                                 src="{{ asset('assets/img/logo.png') }}" class="header-logo" /> <span
-                                class="logo-name">Otika</span>
+                                class="logo-name">Homease</span>
                         </a>
                     </div>
                     <ul class="sidebar-menu">
@@ -75,16 +75,16 @@
                                     data-feather="file-minus"></i><span>Dashboard</span></a>
                         </li>
                         <li class="dropdown">
-                            <a href="{{ route('seller.job.list'); }}" class="nav-link"><i
-                                    data-feather="file-minus"></i><span>Jobs</span></a>
-                        </li>
-                        <li class="dropdown">
                             <a href="#" class="menu-toggle nav-link has-dropdown"><i
                                     data-feather="type"></i><span>Service</span></a>
                             <ul class="dropdown-menu">
                                 <li><a class="nav-link" href="{{ route('seller.service.new'); }}">Add Service</a></li>
                                 <li><a class="nav-link" href="{{ route('seller.service.list'); }}">List Service</a></li>
                             </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="{{ route('seller.job.list'); }}" class="nav-link"><i
+                                    data-feather="file-minus"></i><span>Jobs</span></a>
                         </li>
                     </ul>
                 </aside>

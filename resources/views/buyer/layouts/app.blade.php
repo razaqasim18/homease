@@ -65,7 +65,7 @@
                     <div class="sidebar-brand">
                         <a href="{{ route('buyer.dashboard') }}"> <img alt="image"
                                 src="{{ asset('assets/img/logo.png') }}" class="header-logo" /> <span
-                                class="logo-name">Otika</span>
+                                class="logo-name">Homease</span>
                         </a>
                     </div>
                     <ul class="sidebar-menu">
